@@ -1,35 +1,121 @@
+"use client";
+
+import { useState } from "react";
+
+const GALLERY_ITEMS = [
+  {
+    src: "https://images.unsplash.com/photo-1578985545062-69928b1d9587",
+    title: "Chocolate Dream",
+    category: "Signature",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1535141192574-5d4897c12636",
+    title: "Wedding Elegance",
+    category: "Wedding",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec",
+    title: "Berry Bliss",
+    category: "Classic",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1557979619-445218f326b9",
+    title: "Birthday Magic",
+    category: "Custom",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1608830597604-619220679440",
+    title: "Rose Garden",
+    category: "Signature",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1562440499-64c9a111f713",
+    title: "Pastel Perfection",
+    category: "Custom",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3",
+    title: "Golden Celebration",
+    category: "Wedding",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62",
+    title: "Red Velvet Luxe",
+    category: "Signature",
+  },
+];
+
+const CATEGORIES = ["All", "Signature", "Classic", "Wedding", "Custom"];
+
 export default function Gallery() {
-  const images = [
-    "https://images.unsplash.com/photo-1509440159596-0249088772ff", // Bread close up
-    "https://images.unsplash.com/photo-1555507036-ab1f4038808a", // Bakery interior / display
-    "https://images.unsplash.com/photo-1517433670267-08bbd4be890f", // Sweet bread
-    "https://images.unsplash.com/photo-1623334044303-241021148842", // Concha
-    "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56", // Empanadas (Verified)
-    "https://images.unsplash.com/photo-1603569283847-aa295f0d016a", // Tamales (Verified)
-    "https://images.unsplash.com/photo-1608198093002-ad4e005484ec", // Mexican Bread Basket
-    "https://images.unsplash.com/photo-1578985545062-69928b1d9587"  // Cake (Verified)
-  ];
+  const [activeCategory, setActiveCategory] = useState("All");
+
+  const filteredItems = activeCategory === "All"
+    ? GALLERY_ITEMS
+    : GALLERY_ITEMS.filter(item => item.category === activeCategory);
 
   return (
-    <section id="gallery" className="py-20 bg-brand-secondary/30 relative">
-      <div className="container mx-auto px-6 lg:px-20">
-        <div className="text-center mb-16">
-          <span className="text-brand-primary uppercase tracking-widest font-bold text-sm">Visual Feast</span>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-accent mt-3">From Our Oven to You</h2>
+    <section id="gallery" className="py-28 bg-brand-secondary/20 relative overflow-hidden pattern-overlay">
+      {/* Decorative blobs */}
+      <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-brand-rose/5 blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-60 h-60 rounded-full bg-brand-mauve/5 blur-3xl" />
+
+      <div className="container mx-auto px-6 lg:px-20 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span className="w-12 h-[1px] bg-brand-primary" />
+            <span className="text-brand-primary uppercase tracking-[0.2em] font-semibold text-sm">Our Creations</span>
+            <span className="w-12 h-[1px] bg-brand-primary" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-serif font-bold text-brand-accent mt-3">
+            Cake <span className="italic text-brand-primary">Gallery</span>
+          </h2>
         </div>
 
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 mx-auto">
-          {images.map((src, index) => (
-            <div key={index} className="break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md">
-              <img 
-                src={src} 
-                alt={`Gallery image ${index + 1}`} 
-                className="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-110"
+        {/* Filter Tabs */}
+        <div className="flex flex-wrap justify-center gap-3 mb-14">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-6 py-2.5 rounded-full text-sm font-medium tracking-wider uppercase transition-all duration-300 ${
+                activeCategory === cat
+                  ? "bg-brand-primary text-white shadow-md shadow-brand-primary/20"
+                  : "bg-white text-stone-500 hover:text-brand-primary hover:shadow-sm border border-stone-200 hover:border-brand-rose/30"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Gallery Grid */}
+        <div className="columns-2 md:columns-3 lg:columns-4 gap-5 space-y-5 mx-auto">
+          {filteredItems.map((item, index) => (
+            <div
+              key={`${item.title}-${index}`}
+              className="break-inside-avoid relative group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer"
+            >
+              <img
+                src={item.src}
+                alt={item.title}
+                className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                 <span className="text-white font-medium text-lg drop-shadow-md opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                    Grand Prairie
-                 </span>
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-accent/80 via-brand-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-end p-5">
+                <span className="text-xs text-brand-rose uppercase tracking-widest font-semibold mb-1">
+                  {item.category}
+                </span>
+                <span className="text-white font-serif text-xl font-bold drop-shadow-md transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                  {item.title}
+                </span>
+              </div>
+              {/* Category Badge */}
+              <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-sm text-xs font-bold text-brand-accent shadow-sm">
+                  {item.category}
+                </span>
               </div>
             </div>
           ))}

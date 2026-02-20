@@ -10,11 +10,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -25,61 +21,105 @@ export default function Navbar() {
     { name: "About", href: "#about" },
     { name: "Menu", href: "#menu" },
     { name: "Gallery", href: "#gallery" },
-    { name: "Visit Us", href: "#visit" },
+    { name: "Order Info", href: "#policies" },
+    { name: "Contact", href: "#contact" },
   ];
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
+      id="navbar"
+      className={`fixed w-full z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-md py-4"
-          : "bg-transparent py-6"
+          ? "bg-white/90 backdrop-blur-xl shadow-[0_4px_30px_rgba(183,110,121,0.08)] py-3"
+          : "bg-transparent py-5"
       }`}
     >
       <div className="container mx-auto px-6 lg:px-20 flex justify-between items-center">
-        <Link href="/" className="text-2xl md:text-3xl font-serif font-bold text-brand-primary">
-          Panaderia Celaya
+        {/* Logo */}
+        <Link href="/" className="relative group">
+          <span className={`text-2xl md:text-3xl font-serif font-bold tracking-wide transition-colors duration-300 ${
+            scrolled ? "text-brand-accent" : "text-white"
+          }`}>
+            <span className="italic">Nanté</span>
+          </span>
+          <span className={`block text-[9px] md:text-[10px] uppercase tracking-[0.3em] font-medium transition-colors duration-300 ${
+            scrolled ? "text-brand-primary" : "text-white/80"
+          }`}>
+            Patisserie & Confectionery
+          </span>
+          <span className={`block text-[8px] md:text-[9px] tracking-[0.15em] mt-0.5 transition-colors duration-300 ${
+            scrolled ? "text-stone-400" : "text-white/50"
+          }`}>
+            by <span className="font-medium">Nandita Saxena</span> · Cake Artist | Patissier
+          </span>
+          <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-brand-primary transition-all duration-300 group-hover:w-full" />
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className={`text-lg font-medium transition-colors hover:text-brand-primary ${
-                scrolled ? "text-brand-accent" : "text-white drop-shadow-md"
+              className={`text-sm font-medium uppercase tracking-wider transition-all duration-300 relative group ${
+                scrolled
+                  ? "text-brand-accent hover:text-brand-primary"
+                  : "text-white/90 hover:text-white"
               }`}
             >
               {link.name}
+              <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-brand-primary transition-all duration-300 group-hover:w-full" />
             </Link>
           ))}
+          <Link
+            href="tel:6381151942"
+            className="ml-4 px-6 py-2.5 bg-brand-primary text-white text-sm font-semibold rounded-full hover:bg-brand-accent transition-all duration-300 hover:shadow-lg hover:shadow-brand-primary/20"
+          >
+            Order Now
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-brand-accent focus:outline-none"
+          id="mobile-menu-toggle"
+          className="md:hidden focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} className={scrolled ? "text-brand-accent" : "text-white"} />}
+          {isOpen ? (
+            <X size={26} className="text-brand-accent" />
+          ) : (
+            <Menu size={26} className={scrolled ? "text-brand-accent" : "text-white"} />
+          )}
         </button>
       </div>
 
       {/* Mobile Menu Dropdown */}
-      {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-4 flex flex-col items-center space-y-4 animate-fade-in-down">
+      <div
+        className={`md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-500 ease-in-out ${
+          isOpen ? "max-h-[500px] opacity-100 border-t border-brand-rose/20" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="py-6 flex flex-col items-center space-y-4">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
-              className="text-lg font-medium text-brand-accent hover:text-brand-primary"
+              className="text-base font-medium text-brand-accent hover:text-brand-primary uppercase tracking-wider transition-colors"
               onClick={() => setIsOpen(false)}
             >
               {link.name}
             </Link>
           ))}
+          <Link
+            href="tel:6381151942"
+            className="mt-2 px-8 py-3 bg-brand-primary text-white font-semibold rounded-full hover:bg-brand-accent transition-all"
+            onClick={() => setIsOpen(false)}
+          >
+            Order Now
+          </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 }
